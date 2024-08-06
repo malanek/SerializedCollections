@@ -1,0 +1,12 @@
+{
+    "name": "com.malanek.serializedcollections",
+    "version": "1.0.0",
+    "displayName": "Serialized Collections",
+    "description": "Serialized Dictionary and Array2D in unity inspector!",
+    "license": "MIT",
+    "unity": "2022.3",
+    "additionalInfo": {
+        "repositoryLink": "https://github.com/malanek/SerializedCollections",
+        "supportContact": "For any questions or issues contact mateusz.malanowski@bugbomb.com"
+    }
+}

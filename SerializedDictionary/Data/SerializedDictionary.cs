@@ -7,30 +7,40 @@ using UnityEngine;
 namespace BBExtensions.Dictionary
 {
     [Serializable]
-    public class SerializedDictionary<TKey, TValue> :
-        ICollection<KeyValuePair<TKey, TValue>>,
-        IEnumerable<KeyValuePair<TKey, TValue>>,
-        IEnumerable, IDictionary<TKey, TValue>,
-        IReadOnlyCollection<KeyValuePair<TKey, TValue>>,
-        IReadOnlyDictionary<TKey, TValue>,
-        ICollection,
-        IDictionary,
-        ISerializationCallbackReceiver
+    public class SerializedDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable, IDictionary<TKey, TValue>, IReadOnlyCollection<KeyValuePair<TKey, TValue>>, IReadOnlyDictionary<TKey, TValue>, ICollection, IDictionary, ISerializationCallbackReceiver
     {
-        [SerializeField] internal List<SerializedKeyValuePair<TKey, TValue>> internalCollection = new();
+        [SerializeField] internal List<SerializedKeyValuePair<TKey, TValue>> internalCollection;
+        private Duplicates<TKey, TValue> lookupTable;
+
+        public SerializedDictionary()
+        {
+            internalCollection = new List<SerializedKeyValuePair<TKey, TValue>>();
+        }
+
+        public SerializedDictionary(IDictionary<TKey, TValue> dictionary)
+        {
+            internalCollection = new List<SerializedKeyValuePair<TKey, TValue>>();
+            foreach (KeyValuePair<TKey, TValue> kvp in dictionary)
+                Add(kvp);
+        }
+
+        public SerializedDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
+        {
+            internalCollection = new List<SerializedKeyValuePair<TKey, TValue>>();
+            foreach (KeyValuePair<TKey, TValue> kvp in collection)
+                Add(kvp);
+        }
 
 #if UNITY_EDITOR
         internal IKeyable LookupTable
         {
             get
             {
-                if (_lookupTable == null)
-                    _lookupTable = new Duplicates<TKey, TValue>(this);
-                return _lookupTable;
+                if (lookupTable == null)
+                    lookupTable = new Duplicates<TKey, TValue>(this);
+                return lookupTable;
             }
         }
-
-        private Duplicates<TKey, TValue> _lookupTable;
 #endif
 
         public void OnBeforeSerialize()
@@ -47,8 +57,6 @@ namespace BBExtensions.Dictionary
             LookupTable.RecalculateOccurences();
 #endif
         }
-
-
 
         public ICollection<TKey> Keys => internalCollection.Select(x => x.Key).ToList();
 
@@ -283,35 +291,33 @@ namespace BBExtensions.Dictionary
                 Remove(typedKey);
             }
         }
-
-
     }
 
     public class DictionaryEnumerator<TKey, TValue> : IDictionaryEnumerator
     {
-        private readonly IEnumerator<KeyValuePair<TKey, TValue>> _enumerator;
+        private readonly IEnumerator<KeyValuePair<TKey, TValue>> enumerator;
 
         public DictionaryEnumerator(IDictionary<TKey, TValue> dictionary)
         {
-            _enumerator = dictionary.GetEnumerator();
+            enumerator = dictionary.GetEnumerator();
         }
 
-        public DictionaryEntry Entry => new DictionaryEntry(_enumerator.Current.Key, _enumerator.Current.Value);
+        public DictionaryEntry Entry => new DictionaryEntry(enumerator.Current.Key, enumerator.Current.Value);
 
-        public object Key => _enumerator.Current.Key;
+        public object Key => enumerator.Current.Key;
 
-        public object Value => _enumerator.Current.Value;
+        public object Value => enumerator.Current.Value;
 
         public object Current => Entry;
 
         public bool MoveNext()
         {
-            return _enumerator.MoveNext();
+            return enumerator.MoveNext();
         }
 
         public void Reset()
         {
-            _enumerator.Reset();
+            enumerator.Reset();
         }
     }
 }

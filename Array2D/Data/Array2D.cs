@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace BBExtensions.Array2D
@@ -52,7 +53,7 @@ namespace BBExtensions.Array2D
 
         public Array2D()
         {
-            columnWidth = 64f;
+            columnWidth = TryGuessColumnWidth(typeof(T));
             gridSize = new Vector2Int(3, 3);
             rows = new Row<T>[3];
             for (int i = 0; i < 3; i++)
@@ -61,7 +62,7 @@ namespace BBExtensions.Array2D
 
         public Array2D(int width, int height)
         {
-            ColumnWidth = 64f;
+            columnWidth = TryGuessColumnWidth(typeof(T));
             gridSize = new Vector2Int(width, height);
             rows = new Row<T>[height];
             for (int i = 0; i < height; i++)
@@ -72,6 +73,13 @@ namespace BBExtensions.Array2D
         {
             get => rows[rows.Length - y - 1].elements[x];
             set => rows[rows.Length - y - 1].elements[x] = value;
+        }
+
+        private float TryGuessColumnWidth(Type type)
+        {
+            if (Consts.TypeWidths.TryGetValue(type, out float width))
+                return width;
+            return 128f; // Default width for other types
         }
     }
 }

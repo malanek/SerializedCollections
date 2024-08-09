@@ -14,8 +14,6 @@ namespace BBExtensions.Array2D
         {
             if (!arrayData.ContainsKey(property.propertyPath))
                 arrayData.Add(property.propertyPath, new Array2DInstancePropertyDrawer(property, label));
-            if (arrayData[property.propertyPath].CheckForReferenceChanges(property))
-                arrayData[property.propertyPath] = new Array2DInstancePropertyDrawer(property, label);
             arrayData[property.propertyPath].OnGUI(position);
         }
 
@@ -23,8 +21,6 @@ namespace BBExtensions.Array2D
         {
             if (!arrayData.ContainsKey(property.propertyPath))
                 arrayData.Add(property.propertyPath, new Array2DInstancePropertyDrawer(property, label));
-            if (arrayData[property.propertyPath].CheckForReferenceChanges(property))
-                arrayData[property.propertyPath] = new Array2DInstancePropertyDrawer(property,label);
             return arrayData[property.propertyPath].GetPropertyHeight();
         }
     }

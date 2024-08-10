@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -6,7 +5,7 @@ using UnityEngine;
 namespace BBExtensions.Array2D
 {
     [CustomPropertyDrawer(typeof(Array2D<>), true)]
-    public class Array2DPropertyDrawer : PropertyDrawer
+    internal class Array2DPropertyDrawer : PropertyDrawer
     {
         private readonly Dictionary<string, Array2DInstancePropertyDrawer> arrayData = new();
 
@@ -25,4 +24,3 @@ namespace BBExtensions.Array2D
         }
     }
 }
-#endif

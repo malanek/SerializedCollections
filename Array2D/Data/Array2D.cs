@@ -29,7 +29,7 @@ namespace BBExtensions.Array2D
                 if (rows == null || rows.Length == 0)
                     return new Vector2Int(0, 0);
                 int y = rows.Length;
-                int x = rows[0].elements.Length;
+                int x = rows[0].Cells.Length;
                 gridSize = new Vector2Int(x, y);
                 return gridSize;
             }
@@ -44,8 +44,8 @@ namespace BBExtensions.Array2D
                 int minRows = Mathf.Min(value.y, rows.Length);
                 for (int y = 0; y < minRows; y++)
                 {
-                    int minCols = Mathf.Min(value.x, rows[y].elements.Length);
-                    Array.Copy(rows[y].elements, 0, newRows[y].elements, 0, minCols);
+                    int minCols = Mathf.Min(value.x, rows[y].Cells.Length);
+                    Array.Copy(rows[y].Cells, 0, newRows[y].Cells, 0, minCols);
                 }
                 rows = newRows;
             }
@@ -71,8 +71,8 @@ namespace BBExtensions.Array2D
 
         public T this[int x, int y]
         {
-            get => rows[rows.Length - y - 1].elements[x];
-            set => rows[rows.Length - y - 1].elements[x] = value;
+            get => rows[rows.Length - y - 1].Cells[x].Value;
+            set => rows[rows.Length - y - 1].Cells[x].Value = value;
         }
 
         private float TryGuessColumnWidth(Type type)

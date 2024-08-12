@@ -1,6 +1,6 @@
 {
     "name": "com.malanek.serializedcollections",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "displayName": "Serialized Collections",
     "description": "Serialized Dictionary and Array2D in unity inspector!",
     "license": "MIT",

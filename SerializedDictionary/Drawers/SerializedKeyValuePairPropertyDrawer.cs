@@ -7,8 +7,12 @@ namespace BBExtensions.Dictionary
     [CustomPropertyDrawer(typeof(SerializedKeyValuePair<,>))]
     public class SerializedKeyValuePairPropertyDrawer : PropertyDrawer
     {
-        private const float MinKeyWidth = 70f;
-        private const float Padding = 4f;
+        private const float MinKeyWidth = 50f;
+        private const float KeyWidthRatio = 0.2f;
+        private const float Padding = 2f;
+        private const float ComplexPadding = 16f;
+        private const float InnerPaddingLeft = 4f;
+        private const float InnerPaddingRight = 8f;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -22,8 +26,7 @@ namespace BBExtensions.Dictionary
 
             float adjustedPadding = CalculatePadding(keyProperty, valueProperty);
             float availableWidth = position.width - adjustedPadding;
-
-            float keyWidth = Mathf.Max(availableWidth * 0.2f, MinKeyWidth);
+            float keyWidth = Mathf.Max(availableWidth * KeyWidthRatio, MinKeyWidth);
             float valueWidth = availableWidth - keyWidth - adjustedPadding;
 
             var keyRect = new Rect(position.x, position.y, keyWidth, position.height);
@@ -32,12 +35,15 @@ namespace BBExtensions.Dictionary
             if (keyProperty != null && valueProperty != null)
             {
                 EditorGUI.PropertyField(keyRect, keyProperty, GUIContent.none, true);
+
                 GUI.backgroundColor = Color.white;
-                EditorGUI.PropertyField(valueRect.Cut(0, 4f, 8f, 0), valueProperty, GUIContent.none, true);
+
+                var adjustedValueRect = new Rect(valueRect.x + InnerPaddingLeft, valueRect.y, valueRect.width - InnerPaddingRight, valueRect.height);
+                EditorGUI.PropertyField(adjustedValueRect, valueProperty, GUIContent.none, true);
             }
             else
             {
-                Debug.LogWarning("Unable to find 'Key' or 'Value' property.");
+                Debug.LogWarning($"Unable to find 'Key' or 'Value' property in {property.name}.");
             }
 
             EditorGUI.EndProperty();
@@ -53,10 +59,10 @@ namespace BBExtensions.Dictionary
         private float CalculatePadding(SerializedProperty keyProperty, SerializedProperty valueProperty)
         {
             float padding = Padding;
-            if (IsComplexProperty(valueProperty))
-                padding += 16f;
-            if (IsComplexProperty(keyProperty))
-                padding += 16f;
+            if (IsComplexProperty(keyProperty) || IsComplexProperty(valueProperty))
+            {
+                padding += ComplexPadding;
+            }
             return padding;
         }
 

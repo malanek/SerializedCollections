@@ -61,36 +61,40 @@ namespace BBExtensions.Dictionary
         public void OnGUI(Rect position)
         {
             var internalCollection = property.FindPropertyRelative(Names.InternalCollection);
-            var headerRect = new Rect(position) { height = EditorGUIUtility.singleLineHeight };
+            var elementCount = internalCollection.arraySize;
 
-            property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(headerRect, property.isExpanded, label,
-                menuAction: menuPosition => ShowHeaderContextMenu(menuPosition, internalCollection));
+            var headerRect = new Rect(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
+            var labelRect = new Rect(headerRect.x, headerRect.y, headerRect.width - 50, headerRect.height);
+            var countRect = new Rect(headerRect.x + headerRect.width - 50, headerRect.y, 50, headerRect.height);
 
-            EditorGUI.DrawRect(position, Color.gray * 0.2f);
+            property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(labelRect, property.isExpanded, label);
             EditorGUI.EndFoldoutHeaderGroup();
+            int newElementCount = EditorGUI.DelayedIntField(countRect, elementCount);
+            if (newElementCount != elementCount)
+            {
+                AdjustElementCount(internalCollection, newElementCount);
+            }
 
             if (property.isExpanded)
             {
-                reorderableList.DoList(position.WithPosition(position.position + new Vector2(0, EditorGUIUtility.singleLineHeight)));
+                var listRect = position;
+                listRect.y += EditorGUIUtility.singleLineHeight + 2;
+                listRect.height = reorderableList.GetHeight();
+                reorderableList.DoList(listRect);
             }
+
+            EditorGUI.EndFoldoutHeaderGroup();
         }
 
-        private void ShowHeaderContextMenu(Rect position, SerializedProperty property)
+        private void AdjustElementCount(SerializedProperty collectionProperty, int newCount)
         {
-            var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Reset"), false, () => ResetProperty(property));
-            menu.DropDown(position);
-        }
-
-        private void ResetProperty(SerializedProperty property)
-        {
-            property.arraySize = 0;
-            property.serializedObject.ApplyModifiedProperties();
+            collectionProperty.arraySize = newCount;
+            collectionProperty.serializedObject.ApplyModifiedProperties();
         }
 
         public float GetPropertyHeight()
         {
-            return property.isExpanded ? reorderableList.GetHeight() + EditorGUIUtility.singleLineHeight : EditorGUIUtility.singleLineHeight + 2;
+            return property.isExpanded ? reorderableList.GetHeight() + EditorGUIUtility.singleLineHeight + 2 : EditorGUIUtility.singleLineHeight + 2;
         }
     }
 }

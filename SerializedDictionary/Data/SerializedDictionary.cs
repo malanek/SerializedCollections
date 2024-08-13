@@ -31,33 +31,6 @@ namespace BBExtensions.Dictionary
                 Add(kvp);
         }
 
-#if UNITY_EDITOR
-        internal IKeyable LookupTable
-        {
-            get
-            {
-                if (lookupTable == null)
-                    lookupTable = new Duplicates<TKey, TValue>(this);
-                return lookupTable;
-            }
-        }
-#endif
-
-        public void OnBeforeSerialize()
-        {
-#if UNITY_EDITOR
-            if (UnityEditor.BuildPipeline.isBuildingPlayer)
-                LookupTable.RemoveDuplicates();
-#endif
-        }
-
-        public void OnAfterDeserialize()
-        {
-#if UNITY_EDITOR
-            LookupTable.RecalculateOccurences();
-#endif
-        }
-
         public ICollection<TKey> Keys => internalCollection.Select(x => x.Key).ToList();
 
         public ICollection<TValue> Values => internalCollection.Select(x => x.Value).ToList();
@@ -80,6 +53,17 @@ namespace BBExtensions.Dictionary
 
         ICollection IDictionary.Values => (ICollection)Values;
 
+#if UNITY_EDITOR
+        internal IKeyable LookupTable
+        {
+            get
+            {
+                if (lookupTable == null)
+                    lookupTable = new Duplicates<TKey, TValue>(this);
+                return lookupTable;
+            }
+        }
+#endif
         public object this[object key]
         {
             get => key is TKey typedKey ? this[typedKey] : throw new ArgumentException("Invalid key type");
@@ -121,6 +105,29 @@ namespace BBExtensions.Dictionary
             }
         }
 
+        public bool ContainsKey(TKey key) => internalCollection.Any(x => x.Key.Equals(key));
+
+        public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
+
+        public void Clear() => internalCollection.Clear();
+
+        public bool Contains(KeyValuePair<TKey, TValue> item) => internalCollection.Any(x => x.Key.Equals(item.Key) && EqualityComparer<TValue>.Default.Equals(x.Value, item.Value));
+
+        public void OnBeforeSerialize()
+        {
+#if UNITY_EDITOR
+            if (UnityEditor.BuildPipeline.isBuildingPlayer)
+                LookupTable.RemoveDuplicates();
+#endif
+        }
+
+        public void OnAfterDeserialize()
+        {
+#if UNITY_EDITOR
+            LookupTable.RecalculateOccurences();
+#endif
+        }
+
         public void Add(TKey key, TValue value)
         {
             if (ContainsKey(key))
@@ -129,8 +136,6 @@ namespace BBExtensions.Dictionary
             }
             internalCollection.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
         }
-
-        public bool ContainsKey(TKey key) => internalCollection.Any(x => x.Key.Equals(key));
 
         public bool Remove(TKey key)
         {
@@ -153,21 +158,6 @@ namespace BBExtensions.Dictionary
             }
             value = default(TValue);
             return false;
-        }
-
-        public void Add(KeyValuePair<TKey, TValue> item)
-        {
-            Add(item.Key, item.Value);
-        }
-
-        public void Clear()
-        {
-            internalCollection.Clear();
-        }
-
-        public bool Contains(KeyValuePair<TKey, TValue> item)
-        {
-            return internalCollection.Any(x => x.Key.Equals(item.Key) && EqualityComparer<TValue>.Default.Equals(x.Value, item.Value));
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)

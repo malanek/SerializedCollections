@@ -23,8 +23,8 @@ namespace BBExtensions.AttributeDrawers.Internal
         {
             float labelWidth = EditorGUIUtility.labelWidth;
             Rect labelRect = new(position.x, position.y, labelWidth, position.height);
-            Rect textFieldRect = new(position.x + labelWidth, position.y, position.width - labelWidth - 27, position.height);
-            Rect buttonRect = new(position.x + position.width - 25, position.y, 25, position.height);
+            Rect textFieldRect = new(position.x + labelWidth + 2f, position.y, position.width - labelWidth - 30f, position.height);
+            Rect buttonRect = new(position.x + position.width - 25f, position.y, 25f, position.height);
 
             EditorGUI.LabelField(labelRect, label);
             property.stringValue = EditorGUI.TextField(textFieldRect, property.stringValue);

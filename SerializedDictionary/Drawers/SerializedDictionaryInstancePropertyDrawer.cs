@@ -67,8 +67,12 @@ namespace BBExtensions.Dictionary
             var labelRect = new Rect(headerRect.x, headerRect.y, headerRect.width - 50, headerRect.height);
             var countRect = new Rect(headerRect.x + headerRect.width - 50, headerRect.y, 50, headerRect.height);
 
-            property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(labelRect, property.isExpanded, label);
-            EditorGUI.EndFoldoutHeaderGroup();
+            using (new AlwaysActive(GUI.enabled))
+            {
+                property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(labelRect, property.isExpanded, label);
+                EditorGUI.EndFoldoutHeaderGroup();
+            }
+
             int newElementCount = EditorGUI.DelayedIntField(countRect, elementCount);
             if (newElementCount != elementCount)
             {
@@ -82,8 +86,6 @@ namespace BBExtensions.Dictionary
                 listRect.height = reorderableList.GetHeight();
                 reorderableList.DoList(listRect);
             }
-
-            EditorGUI.EndFoldoutHeaderGroup();
         }
 
         private void AdjustElementCount(SerializedProperty collectionProperty, int newCount)

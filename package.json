@@ -1,12 +1,40 @@
 {
     "name": "com.malanek.serializedcollections",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "displayName": "Serialized Collections + Inspector Extensions",
-    "description": "Serialized Dictionary and Array2D in unity inspector! + Inspector Extensions",
+    "description": "Serialized Dictionary and Array2D for Unity inspector! Plus additional Inspector Extensions to enhance your workflow.",
     "license": "MIT",
     "unity": "2022.3",
+    "author": {
+        "name": "Mateusz Malanowski",
+        "email": "mateusz.malanowski@bugbomb.com",
+        "url": "https://github.com/malanek"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/malanek/SerializedCollections"
+    },
+    "keywords": [
+        "unity",
+        "editor",
+        "serialized",
+        "dictionary",
+        "array2d",
+        "inspector",
+        "extensions"
+    ],
+    "dependencies": {},
     "additionalInfo": {
         "repositoryLink": "https://github.com/malanek/SerializedCollections",
-        "supportContact": "For any questions or issues contact mateusz.malanowski@bugbomb.com"
+        "supportContact": "For any questions or issues, contact mateusz.malanowski@bugbomb.com"
+    },
+    "documentation": "https://github.com/malanek/SerializedCollections/wiki",
+    "changelogUrl": "https://github.com/malanek/SerializedCollections/releases",
+    "features": {
+        "Array2D<T>": "Allows the creation and management of 2D arrays directly in the Unity inspector, providing a more intuitive way to work with grid-based data.",
+        "SerializedDictionary<TKey, TValue>": "Enables the serialization of dictionaries in Unity's inspector, offering a more robust alternative to the standard lists and arrays.",
+        "[Radio]": "A custom attribute that ensures only one boolean value can be true within a group of bool fields, mimicking a radio button behavior in the inspector.",
+        "[FolderPath]": "Adds a button in the inspector that allows for easy selection of a folder path, streamlining the process of setting up file paths.",
+        "[ExpandRef]": "Allows you to expand and view the referenced object directly in the inspector, making it easier to manage complex references without leaving the current context."
     }
 }

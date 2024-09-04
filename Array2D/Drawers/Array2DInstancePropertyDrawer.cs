@@ -68,14 +68,18 @@ namespace BBExtensions.Array2D
             EditorGUI.BeginProperty(position, GUIContent.none, property);
 
             Rect foldoutRect = new(position.x, position.y, position.width, singleLine);
-            property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(foldoutRect, property.isExpanded, label, menuAction: ShowHeaderContextMenu);
-            EditorGUI.EndFoldoutHeaderGroup();
+
+            using (new AlwaysActive(GUI.enabled))
+            {
+                property.isExpanded = EditorGUI.BeginFoldoutHeaderGroup(foldoutRect, property.isExpanded, label, menuAction: ShowHeaderContextMenu);
+                EditorGUI.EndFoldoutHeaderGroup();
+            }
+
             if (property.isExpanded)
             {
                 DrawArrayElements(position);
             }
 
-            EditorGUI.EndFoldoutHeaderGroup();
             EditorGUI.EndProperty();
         }
 
@@ -86,11 +90,13 @@ namespace BBExtensions.Array2D
 
             // Dostosowanie wysokoœci na pasek przewijania
             float adjustedHeight = position.height - singleLine;
-
-            scrollPosition = GUI.BeginScrollView(
+            using (new AlwaysActive(GUI.enabled))
+            {
+                scrollPosition = GUI.BeginScrollView(
                 new Rect(position.x, position.y + singleLine, position.width, adjustedHeight),
                 scrollPosition,
                 new Rect(0, 0, contentWidth, GetTotalHeight()));
+            }
 
             Rect contentRect = new(0, 0, contentWidth, totalHeight);
 

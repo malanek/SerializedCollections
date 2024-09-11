@@ -17,12 +17,13 @@ namespace BBExtensions.AttributeDrawers
         {
             this.property = property;
             this.label = label;
-            canDraw = property.propertyType != SerializedPropertyType.ObjectReference || IsPartOfArray(property);
+            if (this.property != null)
+                canDraw = this.property.propertyType != SerializedPropertyType.ObjectReference || IsPartOfArray(property);
         }
 
         public void OnGUI(Rect position)
         {
-            if (canDraw)
+            if (canDraw || property == null)
             {
                 EditorGUI.LabelField(position, label.text, "Only reference values can be expandable!");
                 return;

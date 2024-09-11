@@ -32,25 +32,42 @@ namespace BBExtensions.AttributeDrawers
 
             EditorGUI.PropertyField(position, property, label);
 
-            if (property.objectReferenceValue != null)
+            if (property.objectReferenceValue == null)
             {
-                isExpanded = EditorGUI.Foldout(position, isExpanded, GUIContent.none, true);
+                EditorGUI.LabelField(position, label.text, "Object reference is null.");
+                EditorGUI.EndProperty();
+                return;
+            }
 
-                if (isExpanded)
+            if (property.objectReferenceValue != null && property.objectReferenceValue.Equals(null))
+            {
+                EditorGUI.LabelField(position, label.text, "Object reference has been destroyed.");
+                EditorGUI.EndProperty();
+                return;
+            }
+
+            isExpanded = EditorGUI.Foldout(position, isExpanded, GUIContent.none, true);
+
+            if (isExpanded)
+            {
+                if (cachedEditor == null)
                 {
-                    if (cachedEditor == null)
-                        Editor.CreateCachedEditor(property.objectReferenceValue, null, ref cachedEditor);
+                    Editor.CreateCachedEditor(property.objectReferenceValue, null, ref cachedEditor);
+                }
 
-                    if (cachedEditor != null)
-                    {
-                        cachedEditor.OnInspectorGUI();
+                if (cachedEditor != null)
+                {
+                    cachedEditor.OnInspectorGUI();
 
-                        Rect scale = GUILayoutUtility.GetLastRect();
-                        float yOffset = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-                        bgRect = new Rect(position.x, position.y + yOffset, position.width, scale.yMax - position.y - yOffset);
+                    Rect scale = GUILayoutUtility.GetLastRect();
+                    float yOffset = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+                    bgRect = new Rect(position.x, position.y + yOffset, position.width, scale.yMax - position.y - yOffset);
 
-                        EditorGUI.DrawRect(bgRect, new Color(0.1f, 0.1f, 0.1f, 0.1f));
-                    }
+                    EditorGUI.DrawRect(bgRect, new Color(0.1f, 0.1f, 0.1f, 0.1f));
+                }
+                else
+                {
+                    EditorGUI.LabelField(position, label.text, "Failed to create editor for object.");
                 }
             }
 

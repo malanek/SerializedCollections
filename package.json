@@ -1,6 +1,6 @@
 {
     "name": "com.malanek.serializedcollections",
-    "version": "1.1.6",
+    "version": "1.1.7",
     "displayName": "Serialized Collections + Inspector Extensions",
     "description": "This package enhances Unity's inspector by providing serialized collections such as SerializedDictionary<TKey, TValue> and Array2D<T>. It includes inspector extensions like [Radio], [FolderPath], and [ExpandRef] to improve workflow and usability. \n\n### Key Features:\n- **Array2D<T>**: Easily create and manage 2D arrays directly in the Unity inspector, ideal for grid-based data like tile maps and matrices.\n- **SerializedDictionary<TKey, TValue>**: Serialize dictionaries in the inspector for efficient management of key-value pairs without losing flexibility.\n- **[Radio]**: Ensure only one boolean value can be true in a group, mimicking radio button behavior for exclusive selections.\n- **[FolderPath]**: Add a button in the inspector for easy folder path selection, streamlining file path configurations.\n- **[ExpandRef]**: Expand and view referenced objects directly in the inspector, making it easier to manage complex data structures.",
     "license": "MIT",

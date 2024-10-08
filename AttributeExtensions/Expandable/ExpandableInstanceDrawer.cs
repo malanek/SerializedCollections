@@ -35,14 +35,14 @@ namespace BBExtensions.AttributeDrawers
 
             if (property.objectReferenceValue == null)
             {
-                EditorGUI.LabelField(position, label.text, "Object reference is null.");
+                //EditorGUI.LabelField(position, label.text, "Object reference is null.");
                 EditorGUI.EndProperty();
                 return;
             }
 
             if (property.objectReferenceValue != null && property.objectReferenceValue.Equals(null))
             {
-                EditorGUI.LabelField(position, label.text, "Object reference has been destroyed.");
+                //EditorGUI.LabelField(position, label.text, "Object reference has been destroyed.");
                 EditorGUI.EndProperty();
                 return;
             }

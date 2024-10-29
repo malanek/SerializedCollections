@@ -10,6 +10,8 @@ namespace BBExtensions.Array2D
         public Row(int width)
         {
             Cells = new Cell<T>[width];
+            for (int i = 0; i < width; i++)
+                Cells[i] = new Cell<T>();
         }
     }
 }

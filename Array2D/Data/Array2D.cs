@@ -6,7 +6,7 @@ using UnityEngine;
 namespace BBExtensions.Array2D
 {
     [Serializable]
-    public sealed class Array2D<T> : IEnumerable<T>
+    public sealed class Array2D<T> : IEnumerable<T>, IReadOnlyArray2D<T>
     {
         [SerializeField] internal Vector2Int gridSize;
         [SerializeField] internal float columnWidth;

@@ -8,5 +8,6 @@ namespace BBExtensions.Array2D
         T this[int x, int y] { get; }
         float ColumnWidth { get; }
         Vector2Int GridSize { get; }
+        T[,] ToArray2D();
     }
 }

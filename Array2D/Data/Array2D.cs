@@ -70,6 +70,17 @@ namespace BBExtensions.Array2D
                 rows[i] = new Row<T>(width);
         }
 
+        public Array2D(T[,] array)
+        {
+            int width = array.GetLength(0);
+            int height = array.GetLength(1);
+            columnWidth = TryGuessColumnWidth(typeof(T));
+            gridSize = new Vector2Int(width, height);
+            rows = new Row<T>[height];
+            for (int i = 0; i < height; i++)
+                rows[i] = new Row<T>(width);
+        }
+
         public T this[int x, int y]
         {
             get => rows[rows.Length - y - 1].Cells[x].Value;
@@ -97,6 +108,15 @@ namespace BBExtensions.Array2D
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public T[,] ToArray2D()
+        {
+            T[,] result = new T[GridSize.x, GridSize.y];
+            for (int y = 0; y < GridSize.y; y++)
+                for (int x = 0; x < GridSize.x; x++)
+                    result[x, y] = this[x, y];
+            return result;
         }
     }
 }

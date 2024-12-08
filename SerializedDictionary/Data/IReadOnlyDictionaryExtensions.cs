@@ -57,5 +57,28 @@ namespace BBExtensions.Dictionary
 
             return dictionary.Keys.OrderBy(_ => Random.Next()).Take(count).Select(key => dictionary[key]);
         }
+        
+        public static TKey GetRandomKey<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary)
+        {
+            if (dictionary == null)
+                throw new ArgumentNullException(nameof(dictionary));
+
+            if (dictionary.Count == 0)
+                throw new InvalidOperationException("Cannot get a random key from an empty dictionary.");
+
+            return dictionary.Keys.OrderBy(_ => Random.Next()).First();
+        }
+
+        public static TValue GetRandomValue<TKey, TValue>(this IReadOnlyDictionary<TKey, TValue> dictionary)
+        {
+            if (dictionary == null)
+                throw new ArgumentNullException(nameof(dictionary));
+
+            if (dictionary.Count == 0)
+                throw new InvalidOperationException("Cannot get a random value from an empty dictionary.");
+
+            var randomKey = dictionary.Keys.OrderBy(_ => Random.Next()).First();
+            return dictionary[randomKey];
+        }
     }
 }

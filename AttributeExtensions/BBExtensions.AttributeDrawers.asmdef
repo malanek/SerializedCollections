@@ -1,3 +1,16 @@
 {
-	"name": "BBExtensions.AttributeDrawers"
+    "name": "BBExtensions.AttributeDrawers",
+    "rootNamespace": "",
+    "references": [
+        "GUID:1b86943b6b635784aa100f571d79143d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

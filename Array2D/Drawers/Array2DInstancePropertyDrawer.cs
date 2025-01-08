@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using MBBExtensions.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace BBExtensions.Array2D
         private const float CellPadding = 2f;
         private readonly float singleLine = EditorGUIUtility.singleLineHeight;
         private readonly Color background = new(0.2f, 0.2f, 0.2f);
-        private readonly float scrollBarHeight = 15f;
+        private const float scrollBarHeight = 15f;
 
         private readonly SerializedProperty property;
         private readonly SerializedProperty rowsProperty;
@@ -85,10 +86,8 @@ namespace BBExtensions.Array2D
 
         private void DrawArrayElements(Rect position)
         {
-            float totalHeight = singleLine;
             float contentWidth = ArraySize.x * (ColumnWidth + CellPadding) - CellPadding;
 
-            // Dostosowanie wysokoœci na pasek przewijania
             float adjustedHeight = position.height - singleLine;
             using (new AlwaysActive(GUI.enabled))
             {
@@ -98,7 +97,7 @@ namespace BBExtensions.Array2D
                 new Rect(0, 0, contentWidth, GetTotalHeight()));
             }
 
-            Rect contentRect = new(0, 0, contentWidth, totalHeight);
+            Rect contentRect = new(0, 0, contentWidth, singleLine);
 
             for (int y = 0; y < ArraySize.y; y++)
             {

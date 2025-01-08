@@ -2,9 +2,9 @@
 using System;
 using UnityEngine;
 
-namespace BBExtensions.Dictionary
+namespace MBBExtensions.Utility
 {
-    internal readonly struct AlwaysActive : IDisposable
+    public readonly struct AlwaysActive : IDisposable
     {
         private readonly bool originalState;
 

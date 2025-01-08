@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using MBBExtensions.Utility;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,8 +31,12 @@ namespace BBExtensions.AttributeDrawers
             EditorGUI.LabelField(position, label);
 
             Rect buttonRect = new Rect(position.xMax - 60, position.y, 60, EditorGUIUtility.singleLineHeight);
-            bool newShowRichText = GUI.Toggle(buttonRect, showRichText, "Rich", "Button");
-            
+            bool newShowRichText;
+            using (new AlwaysActive(GUI.enabled))
+            {
+                newShowRichText = GUI.Toggle(buttonRect, showRichText, "Rich", "Button");
+            }
+
             if (newShowRichText != showRichText)
             {
                 showRichText = newShowRichText;

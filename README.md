@@ -1,3 +1,4 @@
+### README.md (Updated)
 
 # Unity Advanced Serialization Utilities
 
@@ -45,13 +46,25 @@ Enhance your Unity Inspector experience with the following attributes:
   Example:
   ```csharp
   [ResizableRichTextArea] public string richTextContent;
+  ```
 
 ---
 
 ## Getting Started
 
-1. Clone or download the repository to your Unity project.
-2. Import the package into your Unity editor.
+### Installation via Unity Package Manager (UPM)
+
+1. Open Unity and navigate to **Edit > Project Settings > Package Manager**.
+2. Add the following Git URL to your project:
+   ```
+   https://github.com/malanek/SerializedCollections.git
+   ```
+3. Unity will automatically fetch and add the package to your project.
+
+### Manual Installation
+
+1. Clone or download the repository.
+2. Copy the package into your Unity project under the `Assets` folder.
 3. Add the components or attributes to your scripts as needed.
 
 ---
@@ -113,4 +126,3 @@ This package is licensed under the MIT License. Feel free to use and modify it i
 ---
 
 Happy developing! 🎮
-```

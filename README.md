@@ -1,5 +1,3 @@
-### README.md (Updated)
-
 # Unity Advanced Serialization Utilities
 
 This Unity package provides a set of highly flexible and powerful tools for advanced serialization and inspector customization. Whether you need dynamic data structures or enhanced inspector features, this package has you covered. Below is an overview of the included components:

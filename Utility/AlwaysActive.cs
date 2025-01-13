@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace MBBExtensions.Utility
+namespace MExtensions.Utility
 {
     public readonly struct AlwaysActive : IDisposable
     {

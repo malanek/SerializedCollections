@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-using MBBExtensions.Utility;
+using MExtensions.Utility;
 using UnityEditor;
 using UnityEngine;
 

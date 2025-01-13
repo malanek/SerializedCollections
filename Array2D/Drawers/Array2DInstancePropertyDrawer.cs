@@ -1,31 +1,39 @@
 #if UNITY_EDITOR
 using MBBExtensions.Utility;
+using Palmmedia.ReportGenerator.Core;
 using UnityEditor;
 using UnityEngine;
 
 namespace BBExtensions.Array2D
 {
-    internal class Array2DInstancePropertyDrawer
+    internal sealed class Array2DInstancePropertyDrawer
     {
         private const float CellPadding = 2f;
         private readonly float singleLine = EditorGUIUtility.singleLineHeight;
         private readonly Color background = new(0.2f, 0.2f, 0.2f);
         private const float scrollBarHeight = 15f;
-
+        
         private readonly SerializedProperty property;
         private readonly SerializedProperty rowsProperty;
         private readonly SerializedProperty columnWidthProperty;
+        private readonly SerializedProperty renderSizeProperty;
         private readonly GUIContent label;
 
         public Vector2Int ArraySize { get; private set; }
         public SerializedProperty[,] SerializedProperties { get; private set; }
 
-        public float ColumnWidth
+        public int ColumnWidth
         {
-            get => columnWidthProperty.floatValue;
-            set => columnWidthProperty.floatValue = value;
+            get => columnWidthProperty.intValue;
+            set => columnWidthProperty.intValue = value;
         }
 
+        public Vector2Int RenderSize
+        {
+            get => renderSizeProperty.vector2IntValue;
+            set => renderSizeProperty.vector2IntValue = value;
+        }
+        
         private Vector2 scrollPosition;
 
         public Array2DInstancePropertyDrawer(SerializedProperty property, GUIContent label)
@@ -34,10 +42,11 @@ namespace BBExtensions.Array2D
             this.label = label;
             rowsProperty = property.FindPropertyRelative(Names.Rows);
             columnWidthProperty = property.FindPropertyRelative(Names.Width);
+            renderSizeProperty = property.FindPropertyRelative(Names.RenderSize);
             BuildArray();
         }
 
-        public void BuildArray()
+        private void BuildArray()
         {
             ArraySize = GetArraySize();
             SerializedProperties = new SerializedProperty[ArraySize.x, ArraySize.y];
@@ -46,7 +55,8 @@ namespace BBExtensions.Array2D
             for (int y = 0; y < ArraySize.y; y++)
             {
                 var elementsProperty = rowsProperty.GetArrayElementAtIndex(y).FindPropertyRelative(Names.Cells);
-                if (elementsProperty == null || elementsProperty.arraySize <= 0) continue;
+                if (elementsProperty is not { arraySize: > 0 })
+                    continue;
 
                 for (int x = 0; x < ArraySize.x; x++)
                 {
@@ -57,7 +67,8 @@ namespace BBExtensions.Array2D
 
         private Vector2Int GetArraySize()
         {
-            if (rowsProperty == null || rowsProperty.arraySize <= 0) return Vector2Int.zero;
+            if (rowsProperty is not { arraySize: > 0 })
+                return Vector2Int.zero;
 
             int xSize = rowsProperty.GetArrayElementAtIndex(0).FindPropertyRelative(Names.Cells).arraySize;
             int ySize = rowsProperty.arraySize;
@@ -155,20 +166,40 @@ namespace BBExtensions.Array2D
         private void ShowHeaderContextMenu(Rect position)
         {
             var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("Reset"), false, () => OnReset());
+            menu.AddItem(new GUIContent("Reset"), false, OnReset);
             menu.AddSeparator("");
-            menu.AddItem(new GUIContent("Change Column Width"), false, () => OnWidthChange());
-            menu.AddItem(new GUIContent("Change Grid Size"), false, () => OnChangeGridSize());
+            menu.AddItem(new GUIContent("Change Grid Size or Column Width"), false, OnSettingsChange);
             menu.DropDown(position);
         }
 
-        private void OnWidthChange()
+        private void OnSettingsChange()
         {
-            EditorWindowFloatField.ShowWindow("Change column width", ColumnWidth, width =>
+            var gridSizeProperty = property.FindPropertyRelative(Names.GridSize);
+            Array2DSettingsWindow.ShowWindow(new(gridSizeProperty.vector2IntValue, ColumnWidth), settings =>
             {
-                ColumnWidth = width;
-                columnWidthProperty.serializedObject.ApplyModifiedProperties();
-            }, "Width");
+                if (settings.ColumnWidth != ColumnWidth)
+                {
+                    ColumnWidth = settings.ColumnWidth;
+                    columnWidthProperty.serializedObject.ApplyModifiedProperties();
+                }
+
+                if (settings.GridSize != gridSizeProperty.vector2IntValue)
+                {
+                    rowsProperty.arraySize = settings.GridSize.y;
+                    gridSizeProperty.vector2IntValue = settings.GridSize;
+
+                    for (int y = 0; y < settings.GridSize.y; y++)
+                    {
+                        var elementsProperty = rowsProperty.GetArrayElementAtIndex(y).FindPropertyRelative(Names.Cells);
+                        if (elementsProperty == null) continue;
+
+                        elementsProperty.arraySize = settings.GridSize.x;
+                    }
+
+                    property.serializedObject.ApplyModifiedProperties();
+                    BuildArray();
+                }
+            }, property.name);
         }
 
         private void OnReset()
@@ -185,27 +216,6 @@ namespace BBExtensions.Array2D
 
             property.serializedObject.ApplyModifiedProperties();
             BuildArray();
-        }
-
-        private void OnChangeGridSize()
-        {
-            var gridSizeProperty = property.FindPropertyRelative(Names.GridSize);
-            EditorWindowVector2IntField.ShowWindow("Change Grid Size", gridSizeProperty.vector2IntValue, size =>
-            {
-                rowsProperty.arraySize = size.y;
-                gridSizeProperty.vector2IntValue = size;
-
-                for (int y = 0; y < size.y; y++)
-                {
-                    var elementsProperty = rowsProperty.GetArrayElementAtIndex(y).FindPropertyRelative(Names.Cells);
-                    if (elementsProperty == null) continue;
-
-                    elementsProperty.arraySize = size.x;
-                }
-
-                property.serializedObject.ApplyModifiedProperties();
-                BuildArray();
-            }, "Grid Size");
         }
 
         public float GetPropertyHeight()

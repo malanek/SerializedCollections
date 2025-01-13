@@ -9,10 +9,11 @@ namespace BBExtensions.Array2D
     public sealed class Array2D<T> : IEnumerable<T>, IReadOnlyArray2D<T>
     {
         [SerializeField] internal Vector2Int gridSize;
-        [SerializeField] internal float columnWidth;
+        [SerializeField] internal int columnWidth;
+        [SerializeField] internal Vector2Int renderSize;
         [SerializeField] internal Row<T>[] rows;
 
-        public float ColumnWidth
+        public int ColumnWidth
         {
             get => columnWidth;
             set
@@ -87,11 +88,9 @@ namespace BBExtensions.Array2D
             set => rows[rows.Length - y - 1].Cells[x].Value = value;
         }
 
-        private float TryGuessColumnWidth(Type type)
+        private int TryGuessColumnWidth(Type type)
         {
-            if (Consts.TypeWidths.TryGetValue(type, out float width))
-                return width;
-            return 128f; // Default width for other types
+            return Consts.TypeWidths.GetValueOrDefault(type, 128);
         }
 
         public IEnumerator<T> GetEnumerator()

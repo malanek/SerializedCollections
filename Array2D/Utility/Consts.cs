@@ -6,29 +6,29 @@ namespace BBExtensions.Array2D
 {
     internal static class Consts
     {
-        internal static readonly Dictionary<Type, float> TypeWidths = new()
+        internal static readonly Dictionary<Type, int> TypeWidths = new()
         {
-            { typeof(bool), 16f },
-            { typeof(int), 32f },
-            { typeof(float), 32f },
-            { typeof(double), 32f },
-            { typeof(string), 128f },
-            { typeof(Vector2), 64f },
-            { typeof(Vector3), 96f },
-            { typeof(Vector4), 128f },
-            { typeof(Color), 64f },
-            { typeof(Rect), 128f },
-            { typeof(Quaternion), 96f },
-            { typeof(Matrix4x4), 256f },
-            { typeof(Bounds), 128f },
-            { typeof(AnimationCurve), 128f },
-            { typeof(LayerMask), 32f },
-            { typeof(Gradient), 128f },
-            { typeof(RectOffset), 64f },
-            { typeof(Vector2Int), 64f },
-            { typeof(Vector3Int), 96f },
-            { typeof(RectInt), 128f },
-            { typeof(BoundsInt), 128f }
+            { typeof(bool), 16 },
+            { typeof(int), 32 },
+            { typeof(float), 32 },
+            { typeof(double), 32 },
+            { typeof(string), 128 },
+            { typeof(Vector2), 64 },
+            { typeof(Vector3), 96 },
+            { typeof(Vector4), 128 },
+            { typeof(Color), 64 },
+            { typeof(Rect), 128 },
+            { typeof(Quaternion), 96 },
+            { typeof(Matrix4x4), 256 },
+            { typeof(Bounds), 128 },
+            { typeof(AnimationCurve), 128 },
+            { typeof(LayerMask), 32 },
+            { typeof(Gradient), 128 },
+            { typeof(RectOffset), 64 },
+            { typeof(Vector2Int), 64 },
+            { typeof(Vector3Int), 96 },
+            { typeof(RectInt), 128 },
+            { typeof(BoundsInt), 128 }
         };
     }
 }

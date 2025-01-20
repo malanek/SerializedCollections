@@ -6,7 +6,7 @@ using UnityEngine;
 namespace BBExtensions.Array2D
 {
     [Serializable]
-    public sealed class Array2D<T> : IEnumerable<T>, IReadOnlyArray2D<T>
+    public sealed class Array2D<T> : IEnumerable<T>, IReadOnlyArray2D<T>, IEquatable<Array2D<T>>
     {
         [SerializeField] internal Vector2Int gridSize;
         [SerializeField] internal int columnWidth;
@@ -49,6 +49,7 @@ namespace BBExtensions.Array2D
                     int minCols = Mathf.Min(value.x, rows[y].Cells.Length);
                     Array.Copy(rows[y].Cells, 0, newRows[y].Cells, 0, minCols);
                 }
+
                 rows = newRows;
             }
         }
@@ -113,9 +114,27 @@ namespace BBExtensions.Array2D
         {
             T[,] result = new T[GridSize.x, GridSize.y];
             for (int y = 0; y < GridSize.y; y++)
-                for (int x = 0; x < GridSize.x; x++)
-                    result[x, y] = this[x, y];
+            for (int x = 0; x < GridSize.x; x++)
+                result[x, y] = this[x, y];
             return result;
+        }
+
+        public bool Equals(Array2D<T> other)
+        {
+            if (other == null)
+                return false;
+            if (other.GridSize != GridSize)
+                return false;
+            for (int x = 0; x < GridSize.x; x++)
+            {
+                for (int y = 0; y < GridSize.y; y++)
+                {
+                    if (!other[x, y].Equals(this[x, y]))
+                        return false;
+                }
+            }
+
+            return true;
         }
     }
 }
